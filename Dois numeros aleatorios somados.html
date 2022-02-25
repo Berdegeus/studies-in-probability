@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="grapherStyle.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div class="container">
+        <div class="row NavArea">
+          <div class="col-sm-12"><h1>Dois numeros aleatorios somados</h1></div>
+        </div>
+        <div class="row everything">
+          <div class="graph col-sm-12">
+            <canvas id="myChart" width="auto" height="100px"></canvas>
+          </div>
+          <div class="buttons col-md-6">
+            <button class="btn btn-outline-dark" onclick="reset()">
+              reset
+            </button>
+            <button class="btn btn-outline-dark" onclick="bunchPick(1000)">
+              1000 Numeros
+            </button>
+          </div>
+          <div class="description col-md-6">
+            <p>
+              Dessa vez somamos o resultado da mesma função randômica limitada
+              De 0 a 4, podemos observar que os números tendem ao 4, Formando
+              assim o gráfico da probabilidade normal(gaussiana), isso se deve
+              ao fato de ser menos provável a soma ser 8 ou 0 visto que a menos
+              combinações possíveis que resultam nesses números
+            </p>
+            <p>
+              0 + 0 = 0 <br />
+              0 + 1 = 1 / 1 + 0 = 0 <br />
+              0 + 2 = 2 / 1 + 1 = 2 / 2 + 0 = 2 <br />
+              0 + 3 = 3 / 1 + 2 = 3 / 2 + 1 = 3 / 3 + 0 = 3 <br />
+              0 + 4 = 4 / 1 + 3 = 4 / 3 + 1 = 4 / 2 + 2 = 4 / 4 + 0 = 4 <br />
+              <br />
+              e por ai vai
+            </p>
+
+            <p>
+              Tal distribuição pode ser explicada pelo teorema do limite
+              central.
+              <br />
+              O teorema central do limite afirma que a média de uma amostra de
+              <b>N</b> elementos de uma população tende a uma distribuição
+              normal. Pode-se pensar de forma empírica que ao nos distanciarmos
+              da média, a probabilidade de ocorrência diminui, ou seja, é mais
+              provável ocorrer um evento que se encontra próximo da média do que
+              um evento de um dos extremos.
+            </p>
+          </div>
+        </div>
+        <div class="row theFooterArea">
+          <div class="col-sm-12"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let numbers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let count = 0;
+
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+          datasets: [
+            {
+              label: 'numeros aleatorios',
+              data: [
+                numbers[0],
+                numbers[1],
+                numbers[2],
+                numbers[3],
+                numbers[4],
+                numbers[5],
+                numbers[6],
+                numbers[7],
+                numbers[8],
+                numbers[9],
+              ],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                  suggestedMin: 10,
+                  suggestedMax: 10,
+                  stepSize: 1,
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      function reset() {
+        numbers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        count = 0;
+        updateChart();
+      }
+
+      function bunchPick(n) {
+        for (let i = 0; i < n; i++) {
+          numbers[
+            Math.floor(Math.random() * 5) + Math.floor(Math.random() * 5)
+          ] += 1;
+          count += 1;
+        }
+        for (let n = 0; n < numbers.length; n++) {
+          myChart.data.datasets[0].label = `${count} números. numeros escolhidos: ${numbers}`;
+          updateChart();
+        }
+      }
+
+      function updateChart() {
+        for (let n = 0; n < numbers.length; n++) {
+          myChart.data.datasets[0].label = `${count} números. numeros escolhidos: ${numbers}`;
+          myChart.data.datasets[0].data[n] = numbers[n];
+          myChart.update();
+        }
+      }
+      function pickNumber() {
+        let rn = Math.floor(Math.random() * 10);
+        numbers[rn] += 1;
+        count += 1;
+        // update the first dataset's value of 'March' to be 50
+        myChart.data.datasets[0].data[rn] = numbers[rn];
+        myChart.data.datasets[0].label = `${count} números. numeros escolhidos: ${numbers}`;
+        myChart.update();
+      }
+
+      function updateText(txt) {
+        document.getElementById('messageText').innerHTML = `${txt}`;
+        document.getElementById(
+          'scoreText1'
+        ).innerHTML = `Score:${score} Right:${rightCount} Wrong:${wrongCount}`;
+        document.getElementById(
+          'scoreText2'
+        ).innerHTML = `multi:${mulitStreak} Streak:win ${winningStreak} loss ${losingStreak}`;
+        document.getElementById(
+          'oldNumberText'
+        ).innerHTML = `Old Number: ${lastNumber}`;
+        document.getElementById(
+          'currentNumberText'
+        ).innerHTML = `Current Number: ${currentNumber}`;
+      }
+    </script>
+  </body>
+</html>
